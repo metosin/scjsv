@@ -15,19 +15,22 @@
         ^JsonSchema schema (.getJsonSchema factory schema-object)]
     schema))
 
+;;
+;; public api
+;;
+
 (defn validate-json
   "validates a json-string against a json-schema-string"
-  [^:String schema-string, ^:String json-string]
-  (let [schema             (get-schema schema-string)
-        report             (.validate schema (JsonLoader/fromString json-string) true)
-        lp                 (ListProcessingReport.)
-        _                  (.mergeWith lp report)
-        errors             (iterator-seq (.iterator lp))]
+  [schema-string, json-string]
+  (let [schema (get-schema schema-string)
+        report (.validate schema (JsonLoader/fromString json-string) true)
+        lp     (doto (ListProcessingReport.) (.mergeWith report))
+        errors (iterator-seq (.iterator lp))
+        ->clj  #(-> (.asJson %) str (c/parse-string true))]
     (if (seq errors)
-      (map str errors))))
+      (map ->clj errors))))
 
 (defn validate
   "validates a clojure data structure against a json-schema-string"
-  [^:String schema-string, data]
+  [schema-string, data]
   (validate-json schema-string (c/generate-string data)))
-
