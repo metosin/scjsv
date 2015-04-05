@@ -6,6 +6,7 @@
             :distribution :repo
             :comments "same as Clojure"}
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 [cheshire "5.4.0"]
                  [com.github.fge/json-schema-validator "2.2.6"]]
   :profiles {:dev {:dependencies [[midje "1.7.0-SNAPSHOT"]]
                    :plugins [[lein-clojars "0.9.1"]

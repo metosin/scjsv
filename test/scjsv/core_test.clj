@@ -7,6 +7,26 @@
 (def valid (slurp (io/resource "scjsv/valid.json")))
 (def invalid (slurp (io/resource "scjsv/invalid.json")))
 
+(fact "validate-json"
+  (validate-json schema-string valid) => nil
+  (validate-json schema-string invalid) =not=> nil)
+
 (fact "validate"
-  (validate schema-string valid) => nil
-  (validate schema-string invalid) =not=> nil)
+  (validate schema-string
+            {:shipping_address
+             {:street_address "1600 Pennsylvania Avenue NW"
+              :city "Washington"
+              :state "DC"}
+             :billing_address
+             {:street_address "1st Street SE"
+              :city "Washington"
+              :state "DC"}}) => nil
+  (validate schema-string
+            {:shipping_address
+             {:street_address "1600 Pennsylvania Avenue NW",
+              :state "DC"}
+             :evil true,
+             :billing_address
+             {:street_address "1st Street SE",
+              :city "Washington",
+              :state "DC"}}) =not=> nil)
