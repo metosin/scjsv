@@ -3,29 +3,36 @@
             [scjsv.core :refer :all]
             [clojure.java.io :as io]))
 
-(def schema-string (slurp (io/resource "scjsv/schema.json")))
-
-(fact "validate-json"
-  (let [valid (slurp (io/resource "scjsv/valid.json"))
+(fact "Validating JSON string against JSON Schema (as string)"
+  (let [schema (slurp (io/resource "scjsv/schema.json"))
+        valid (slurp (io/resource "scjsv/valid.json"))
         invalid (slurp (io/resource "scjsv/invalid.json"))]
-    (validate-json schema-string valid) => nil
-    (validate-json schema-string invalid) =not=> nil))
+    (validate-json schema valid) => nil
+    (validate-json schema invalid) =not=> nil))
 
-(fact "validate"
-  (let [valid {:shipping_address
-              {:street_address "1600 Pennsylvania Avenue NW"
-               :city "Washington"
-               :state "DC"}
-              :billing_address
-              {:street_address "1st Street SE"
-               :city "Washington"
-               :state "DC"}}
+(fact "Validating Clojure data against JSON Schema (as Clojure)"
+  (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
+                :type "object"
+                :properties {:billing_address {:$ref "#/definitions/address"}
+                             :shipping_address {:$ref "#/definitions/address"}}
+                :definitions {:address {:type "object"
+                                        :properties {:street_address {:type "string"}
+                                                     :city {:type "string"}
+                                                     :state {:type "string"}}
+                                        :required ["street_address", "city", "state"]}}}
+        valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
+                                  :city "Washington"
+                                  :state "DC"}
+               :billing_address {:street_address "1st Street SE"
+                                 :city "Washington"
+                                 :state "DC"}}
         invalid (update-in valid [:shipping_address] dissoc :state)]
-    (validate schema-string valid) => nil
-    (validate schema-string invalid) =not=> nil
+
+    (validate schema valid) => nil
+    (validate schema invalid) =not=> nil
 
     (fact "validation errors are lovey clojure maps"
-      (validate schema-string invalid)
+    (validate schema invalid)
       => [{:domain "validation"
            :instance {:pointer "/shipping_address"}
            :keyword "required"
