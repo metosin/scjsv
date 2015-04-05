@@ -3,7 +3,7 @@
   (:import [com.fasterxml.jackson.databind ObjectMapper]
            [com.github.fge.jsonschema.main JsonSchemaFactory]
            [com.github.fge.jackson JsonLoader]
-           [com.github.fge.jsonschema.core.report ListProcessingReport]
+           [com.github.fge.jsonschema.core.report ListProcessingReport ProcessingMessage]
            [com.github.fge.jsonschema.main JsonSchema]))
 
 (defn validate-json
@@ -14,13 +14,13 @@
                         schema
                         (c/generate-string schema))
         mapper (ObjectMapper.)
-        schema-object (.readTree mapper schema-string)
+        schema-object (.readTree ^ObjectMapper mapper ^String schema-string)
         factory (JsonSchemaFactory/byDefault)
-        ^JsonSchema schema-object (.getJsonSchema factory schema-object)
-        report (.validate schema-object (JsonLoader/fromString json-string) true)
+        schema-object (.getJsonSchema ^JsonSchemaFactory factory schema-object)
+        report (.validate ^JsonSchema schema-object (JsonLoader/fromString json-string) true)
         lp (doto (ListProcessingReport.) (.mergeWith report))
         errors (iterator-seq (.iterator lp))
-        ->clj #(-> (.asJson %) str (c/parse-string true))]
+        ->clj #(-> (.asJson ^ProcessingMessage %) str (c/parse-string true))]
     (if (seq errors)
       (map ->clj errors))))
 
