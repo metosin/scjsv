@@ -1,6 +1,6 @@
 # scjsv
 
-Simple Clojure JSON-Schema Validator - a lightweight clojure wrapper on top of [com.github.fge/json-schema-validator](https://github.com/fge/json-schema-validator).
+Simple Clojure JSON-Schema Validator - on top of [com.github.fge/json-schema-validator](https://github.com/fge/json-schema-validator).
 
 ## Usage
 
@@ -11,9 +11,9 @@ Simple Clojure JSON-Schema Validator - a lightweight clojure wrapper on top of [
 ```clojure
 (require '[scjsv.core :as v])
 
-(def schema {:$schema "http://json-schema.org/draft-04/schema#",
-             :type "object",
-             :properties {:id {:type "integer"}},
+(def schema {:$schema "http://json-schema.org/draft-04/schema#"
+             :type "object"
+             :properties {:id {:type "integer"}}
              :required [:id]})
 
 (v/validate schema {:id 1})
