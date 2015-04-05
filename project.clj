@@ -11,5 +11,6 @@
   :profiles {:dev {:dependencies [[midje "1.7.0-SNAPSHOT"]]
                    :plugins [[lein-clojars "0.9.1"]
                              [lein-ring "0.9.3"]
-                             [lein-midje "3.1.3"]]}}
+                             [lein-midje "3.1.3"]]}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha4"]]}}
   :aliases {"test-ancient" ["midje"]})
