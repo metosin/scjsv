@@ -1,4 +1,4 @@
-# scjsv
+# scjsv [![Build Status](https://travis-ci.org/metosin/scjsv.png?branch=master)](https://travis-ci.org/metosin/scjsv) [![Dependencies Status](http://jarkeeper.com/metosin/scjsv/status.png)](http://jarkeeper.com/metosin/scjsv)
 
 Simple Clojure JSON-Schema Validator - on top of [com.github.fge/json-schema-validator](https://github.com/fge/json-schema-validator).
 
