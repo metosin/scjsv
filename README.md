@@ -4,12 +4,31 @@ Simple Clojure JSON-Schema Validator - a lightweight clojure wrapper on top of [
 
 ## Usage
 
-FIXME
+* `validate-json` to validate JSON strings agains a JSON Schema
+* `validate` to validate Clojure data against a JSON Schema
+* JSON Schemas can be represented either as JSON strings or as Clojure Maps
 
-## TODO
-- [ ] allow data & schemas as clojure data structures
-- [ ] error reports as clojure data structures
-- [ ] performance
+```clojure
+(require '[scjsv.core :as v])
+
+(def schema {:$schema "http://json-schema.org/draft-04/schema#",
+             :type "object",
+             :properties {:id {:type "integer"}},
+             :required [:id]})
+
+(v/validate schema {:id 1})
+; nil
+
+(v/validate schema {})
+; ({:domain "validation"
+;   :instance {:pointer ""}
+;   :keyword "required"
+;   :level "error"
+;   :message "object has missing required properties ([\"id\"])"
+;   :missing ["id"]
+;   :required ["id"]
+;   :schema {:loadingURI "#" :pointer ""}})
+```
 
 ## License
 
