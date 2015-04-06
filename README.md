@@ -2,6 +2,10 @@
 
 Simple Clojure JSON-Schema Validator - on top of [com.github.fge/json-schema-validator](https://github.com/fge/json-schema-validator).
 
+## Latest version
+
+[![Clojars Project](http://clojars.org/metosin/scjsv/latest-version.svg)](http://clojars.org/metosin/scjsv)
+
 ## Usage
 
 * `validate-json` to validate JSON strings agains a JSON Schema
