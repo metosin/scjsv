@@ -1,6 +1,6 @@
 (ns scjsv.core
   (:require [cheshire.core :as c])
-  (:import [com.fasterxml.jackson.databind ObjectMapper]
+  (:import [com.fasterxml.jackson.databind ObjectMapper JsonNode]
            [com.github.fge.jsonschema.main JsonSchemaFactory]
            [com.github.fge.jackson JsonLoader]
            [com.github.fge.jsonschema.core.report ListProcessingReport ProcessingMessage]
@@ -17,7 +17,8 @@
         schema-object (.readTree ^ObjectMapper mapper ^String schema-string)
         factory (JsonSchemaFactory/byDefault)
         schema-object (.getJsonSchema ^JsonSchemaFactory factory schema-object)
-        report (.validate ^JsonSchema schema-object (JsonLoader/fromString json-string) true)
+        json-data (JsonLoader/fromString json-string)
+        report (.validate ^JsonSchema schema-object ^JsonNode json-data)
         lp (doto (ListProcessingReport.) (.mergeWith report))
         errors (iterator-seq (.iterator lp))
         ->clj #(-> (.asJson ^ProcessingMessage %) str (c/parse-string true))]
