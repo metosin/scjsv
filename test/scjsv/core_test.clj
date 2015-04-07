@@ -1,15 +1,15 @@
 (ns scjsv.core-test
   (:require [midje.sweet :refer :all]
-            [scjsv.core :refer :all]
+            [scjsv.core :as v]
             [clojure.java.io :as io]))
 
 (fact "Validating JSON string against JSON Schema (as string)"
   (let [schema (slurp (io/resource "scjsv/schema.json"))
-        validator (partial validate-json (schema-object schema))
+        validate (v/json-validator schema)
         valid (slurp (io/resource "scjsv/valid.json"))
         invalid (slurp (io/resource "scjsv/invalid.json"))]
-    (validator valid) => nil
-    (validator invalid) =not=> nil))
+    (validate valid) => nil
+    (validate invalid) =not=> nil))
 
 (fact "Validating Clojure data against JSON Schema (as Clojure)"
   (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
@@ -21,7 +21,7 @@
                                                      :city {:type "string"}
                                                      :state {:type "string"}}
                                         :required ["street_address", "city", "state"]}}}
-        validator (partial validate (schema-object schema))
+        validate (v/validator schema)
         valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
                                   :city "Washington"
                                   :state "DC"}
@@ -30,11 +30,11 @@
                                  :state "DC"}}
         invalid (update-in valid [:shipping_address] dissoc :state)]
 
-    (validator valid) => nil
-    (validator invalid) =not=> nil
+    (validate valid) => nil
+    (validate invalid) =not=> nil
 
     (fact "validation errors are lovey clojure maps"
-      (validator invalid)
+      (validate invalid)
       => [{:domain "validation"
            :instance {:pointer "/shipping_address"}
            :keyword "required"

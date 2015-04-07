@@ -8,9 +8,9 @@ Simple Clojure JSON-Schema Validator - on top of [com.github.fge/json-schema-val
 
 ## Usage
 
-* `schema-object` to create JSON Schema objects from JSON Strings or Clojure Maps.
-* `validate-json` to validate JSON strings agains a JSON Schema
-* `validate` to validate Clojure data against a JSON Schema
+* `validator` creates a Clojure data structure validator against the given JSON Schema.
+* `json-validator` created a JSON string validator against the given JSON Schema.
+* JSON Schemas can be represented either as JSON strings or as Clojure Maps
 
 ```clojure
 (require '[scjsv.core :as v])
@@ -20,8 +20,8 @@ Simple Clojure JSON-Schema Validator - on top of [com.github.fge/json-schema-val
              :properties {:id {:type "integer"}}
              :required [:id]})
 
-; internally cached schema 
-(def validate (partial v/validate (v/schema-object schema)))
+; internally cached schema
+(def validate (v/validator schema))
 
 (validate {:id 1})
 ; nil
