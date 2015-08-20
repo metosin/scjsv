@@ -6,11 +6,11 @@
             :distribution :repo
             :comments "same as Clojure"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [cheshire "5.4.0"]
+                 [cheshire "5.5.0"]
                  [com.github.fge/json-schema-validator "2.2.6"]]
-  :profiles {:dev {:dependencies [[midje "1.7.0-SNAPSHOT"]]
+  :profiles {:dev {:dependencies [[midje "1.7.0"]]
                    :plugins [[lein-clojars "0.9.1"]
-                             [lein-ring "0.9.3"]
+                             [lein-ring "0.9.6"]
                              [lein-midje "3.1.3"]]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha4"]]}}
   :aliases {"test-ancient" ["midje"]})
