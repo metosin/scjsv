@@ -8,9 +8,9 @@
   :dependencies [[cheshire "5.5.0"]
                  [com.github.fge/json-schema-validator "2.2.6"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.7.0"]
-                                  [midje "1.7.0"]]
+                                  [midje "1.8.2"]]
                    :plugins [[lein-clojars "0.9.1"]
-                             [lein-ring "0.9.6"]
-                             [lein-midje "3.1.3"]]}
+                             [lein-ring "0.9.7"]
+                             [lein-midje "3.2"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}}
   :aliases {"test-ancient" ["midje"]})
