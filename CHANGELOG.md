@@ -3,7 +3,8 @@
 - updated dependencies:
 
 ```clojure
-[cheshire "5.5.0"] is available but we use "5.4.0"
+[cheshire "5.6.1"] is available but we use "5.4.0"
+[org.clojure "1.8.0"] is available but we use "1.7.0"
 ```
 
 - dev-dependencies:
