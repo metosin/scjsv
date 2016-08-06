@@ -19,9 +19,8 @@
 
 (defn- validate
   "Validates (f data) against a given JSON Schema."
-  [json-schema f data]
-  (let [json-string (f data)
-        json-data (JsonLoader/fromString json-string)
+  [json-schema data]
+  (let [json-data (JsonLoader/fromString data)
         report (.validate ^JsonSchema json-schema ^JsonNode json-data)
         lp (doto (ListProcessingReport.) (.mergeWith report))
         errors (iterator-seq (.iterator lp))
@@ -39,7 +38,7 @@
   ([schema]
    (json-validator schema (JsonSchemaFactory/byDefault)))
   ([schema json-schema-factory]
-   (partial validate (->json-schema schema json-schema-factory) identity)))
+   (partial validate (->json-schema schema json-schema-factory))))
 
 (defn validator
   "Returns a JSON string validator (a single arity fn).
@@ -47,4 +46,5 @@
   ([schema]
    (validator schema (JsonSchemaFactory/byDefault)))
   ([schema json-schema-factory]
-   (partial validate (->json-schema schema json-schema-factory) c/generate-string)))
+   (comp (partial validate (->json-schema schema json-schema-factory))
+         c/generate-string)))
