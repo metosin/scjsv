@@ -33,7 +33,7 @@
 ;;
 
 (defn json-validator
-  "Returns a Clojure data structure validator (a single arity fn).
+  "Returns a JSON string validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
   ([schema]
    (json-validator schema (JsonSchemaFactory/byDefault)))
@@ -41,7 +41,7 @@
    (partial validate (->json-schema schema json-schema-factory))))
 
 (defn validator
-  "Returns a JSON string validator (a single arity fn).
+  "Returns a Clojure data structure validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
   ([schema]
    (validator schema (JsonSchemaFactory/byDefault)))
