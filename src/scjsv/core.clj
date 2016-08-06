@@ -8,19 +8,18 @@
 
 (defn- ->json-schema
   "Creates a JSONSchema instance either from a JSON string or a Clojure Map."
-  [schema]
+  [schema factory]
   (let [schema-string (if (string? schema)
                         schema
                         (c/generate-string schema))
         mapper (ObjectMapper.)
         schema-object (.readTree ^ObjectMapper mapper ^String schema-string)
-        factory (JsonSchemaFactory/byDefault)
         json-schema (.getJsonSchema ^JsonSchemaFactory factory ^JsonNode schema-object)]
     json-schema))
 
 (defn- validate
   "Validates (f data) against a given JSON Schema."
-  [json-schema, f, data]
+  [json-schema f data]
   (let [json-string (f data)
         json-data (JsonLoader/fromString json-string)
         report (.validate ^JsonSchema json-schema ^JsonNode json-data)
@@ -37,11 +36,15 @@
 (defn json-validator
   "Returns a Clojure data structure validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
-  [schema]
-  (partial validate (->json-schema schema) identity))
+  ([schema]
+   (json-validator schema (JsonSchemaFactory/byDefault)))
+  ([schema json-schema-factory]
+   (partial validate (->json-schema schema json-schema-factory) identity)))
 
 (defn validator
   "Returns a JSON string validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
-  [schema]
-  (partial validate (->json-schema schema) c/generate-string))
+  ([schema]
+   (validator schema (JsonSchemaFactory/byDefault)))
+  ([schema json-schema-factory]
+   (partial validate (->json-schema schema json-schema-factory) c/generate-string)))

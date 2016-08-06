@@ -1,7 +1,8 @@
 (ns scjsv.core-test
   (:require [midje.sweet :refer :all]
             [scjsv.core :as v]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io])
+  (:import [com.github.fge.jsonschema.main JsonSchemaFactory]))
 
 (fact "Validating JSON string against JSON Schema (as string)"
   (let [schema (slurp (io/resource "scjsv/schema.json"))
@@ -22,6 +23,7 @@
                                                      :state {:type "string"}}
                                         :required ["street_address", "city", "state"]}}}
         validate (v/validator schema)
+        validate-with-explicit-factory (v/validator schema (JsonSchemaFactory/byDefault))
         valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
                                   :city "Washington"
                                   :state "DC"}
@@ -32,6 +34,9 @@
 
     (validate valid) => nil
     (validate invalid) =not=> nil
+
+    (validate-with-explicit-factory valid) => nil
+    (validate-with-explicit-factory invalid) =not=> nil
 
     (fact "validation errors are lovey clojure maps"
       (validate invalid)
