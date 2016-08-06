@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
-  :dependencies [[cheshire "5.6.1"]
+  :dependencies [[cheshire "5.6.3"]
                  [com.github.fge/json-schema-validator "2.2.6"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
                                   [org.codehaus.jsr166-mirror/jsr166y "1.7.0"]
