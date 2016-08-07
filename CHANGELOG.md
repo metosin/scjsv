@@ -1,9 +1,11 @@
-## *.*.* 
+## 0.3.0 (7.8.2016)
+
+- `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
 
 - updated dependencies:
 
 ```clojure
-[cheshire "5.6.1"] is available but we use "5.4.0"
+[cheshire "5.6.3"] is available but we use "5.4.0"
 [org.clojure "1.8.0"] is available but we use "1.7.0"
 ```
 
