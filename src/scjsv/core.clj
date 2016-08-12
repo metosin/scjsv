@@ -1,21 +1,31 @@
 (ns scjsv.core
   (:require [cheshire.core :as c])
-  (:import [com.fasterxml.jackson.databind ObjectMapper JsonNode]
-           [com.github.fge.jsonschema.main JsonSchemaFactory]
+  (:import [com.fasterxml.jackson.databind JsonNode]
            [com.github.fge.jackson JsonLoader]
+           [com.github.fge.jsonschema.main JsonSchemaFactory]
+           [com.github.fge.jsonschema.core.load Dereferencing]
+           [com.github.fge.jsonschema.core.load.configuration LoadingConfiguration]
            [com.github.fge.jsonschema.core.report ListProcessingReport ProcessingMessage]
            [com.github.fge.jsonschema.main JsonSchema]))
 
+(defn- inlining-factory
+  "Creates a JsonSchemaFactory that uses inline dereferencing."
+  []
+  (let [loading-config (-> (LoadingConfiguration/newBuilder)
+                           (.dereferencing (Dereferencing/INLINE))
+                           (.freeze))]
+    (-> (JsonSchemaFactory/newBuilder)
+        (.setLoadingConfiguration loading-config)
+        (.freeze))))
+
 (defn- ->json-schema
   "Creates a JSONSchema instance either from a JSON string or a Clojure Map."
-  [schema factory]
+  [schema ^JsonSchemaFactory factory]
   (let [schema-string (if (string? schema)
                         schema
                         (c/generate-string schema))
-        mapper (ObjectMapper.)
-        schema-object (.readTree ^ObjectMapper mapper ^String schema-string)
-        json-schema (.getJsonSchema ^JsonSchemaFactory factory ^JsonNode schema-object)]
-    json-schema))
+        schema-object (JsonLoader/fromString schema-string)]
+    (.getJsonSchema factory schema-object)))
 
 (defn- validate
   "Validates (f data) against a given JSON Schema."
@@ -36,7 +46,7 @@
   "Returns a JSON string validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
   ([schema]
-   (json-validator schema (JsonSchemaFactory/byDefault)))
+   (json-validator schema (inlining-factory)))
   ([schema json-schema-factory]
    (partial validate (->json-schema schema json-schema-factory))))
 
@@ -44,7 +54,7 @@
   "Returns a Clojure data structure validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map."
   ([schema]
-   (validator schema (JsonSchemaFactory/byDefault)))
+   (validator schema (inlining-factory)))
   ([schema json-schema-factory]
    (comp (partial validate (->json-schema schema json-schema-factory))
          c/generate-string)))

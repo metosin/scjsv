@@ -1,3 +1,13 @@
+## Unreleased
+
+- Default to [inline dereferencing][inline-deref]. According to the JSON Schema Core specification draft v4, this may break some schemas:
+
+  > Inline dereferencing can produce canonical URIs which differ from the canonical URI of the root schema. Schema authors SHOULD ensure that implementations using canonical dereferencing obtain the same content as implementations using inline dereferencing.
+
+  To use canonical dereferencing (the old behavior), pass a suitable `JsonSchemaFactory` to `validator`/`json-validator`.
+
+[inline-deref]: (http://json-schema.org/latest/json-schema-core.html#anchor30).
+
 ## 0.3.0 (7.8.2016)
 
 - `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
