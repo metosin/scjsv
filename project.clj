@@ -18,5 +18,5 @@
   :aliases {"test-ancient" ["midje"]}
   :codeina {:sources ["src"]
             :target "gh-pages/doc"
-            :src-dir-uri "http://github.com/metosin/scjsv/blob/master/"
-            :src-linenum-anchor-prefix "L"})
+            :src-uri "http://github.com/metosin/scjsv/blob/master/"
+            :src-uri-prefix "#L"})
