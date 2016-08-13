@@ -12,6 +12,11 @@
                                   [midje "1.8.3"]]
                    :plugins [[lein-clojars "0.9.1"]
                              [lein-ring "0.9.7"]
-                             [lein-midje "3.2"]]}
+                             [lein-midje "3.2"]
+                             [funcool/codeina "0.4.0" :exclude [org.clojure/clojure]]]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}}
-  :aliases {"test-ancient" ["midje"]})
+  :aliases {"test-ancient" ["midje"]}
+  :codeina {:sources ["src"]
+            :target "gh-pages/doc"
+            :src-dir-uri "http://github.com/metosin/scjsv/blob/master/"
+            :src-linenum-anchor-prefix "L"})
