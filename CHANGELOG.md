@@ -1,6 +1,7 @@
 ## 0.3.0 (7.8.2016)
 
 - `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
+   - Thanks to [lvh](https://github.com/lvh)!
 
 - updated dependencies:
 
