@@ -38,7 +38,7 @@
     (validate-with-explicit-factory valid) => nil
     (validate-with-explicit-factory invalid) =not=> nil
 
-    (fact "validation errors are lovey clojure maps"
+    (fact "validation errors are lovely clojure maps"
       (validate invalid)
       => [{:domain "validation"
            :instance {:pointer "/shipping_address"}
@@ -52,6 +52,8 @@
 
 (fact "Validating a schema that refers to itself"
   (let [schema (slurp (io/resource "scjsv/with_id.json"))
-        validate (v/validator schema)
+        default-validate (v/validator schema)
+        inline-validate (v/validator schema {:dereferencing :inline})
         valid {:foo "foo"}]
-    (validate valid) => nil))
+    (default-validate valid) =not=> nil
+    (inline-validate valid) => nil))

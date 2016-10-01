@@ -8,11 +8,14 @@
            [com.github.fge.jsonschema.core.report ListProcessingReport ProcessingMessage]
            [com.github.fge.jsonschema.main JsonSchema]))
 
-(defn- inlining-factory
-  "Creates a JsonSchemaFactory that uses inline dereferencing."
-  []
-  (let [loading-config (-> (LoadingConfiguration/newBuilder)
-                           (.dereferencing (Dereferencing/INLINE))
+(defn- build-factory
+  "Creates a JsonSchemaFactory based on the options map."
+  [{:keys [dereferencing] :or {dereferencing :canonical}}]
+  (let [dereferencing-mode (case dereferencing
+                             :inline (Dereferencing/INLINE)
+                             :canonical (Dereferencing/CANONICAL))
+        loading-config (-> (LoadingConfiguration/newBuilder)
+                           (.dereferencing dereferencing-mode)
                            (.freeze))]
     (-> (JsonSchemaFactory/newBuilder)
         (.setLoadingConfiguration loading-config)
@@ -38,23 +41,43 @@
     (if (seq errors)
       (map ->clj errors))))
 
+(defn- ->factory
+  "Converts value to a JsonSchemaFactory if it isn't one."
+  [value]
+  (cond
+    (instance? JsonSchemaFactory value) value
+    (map? value) (build-factory value)
+    :else (throw (Exception. (str "Don't know how to convert " (pr-str value)
+                                  " into a JsonSchemaFactory.")))))
+
 ;;
 ;; Public API
 ;;
 
 (defn json-validator
   "Returns a JSON string validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map."
+  Schema can be given either as a JSON String or a Clojure Map.
+
+  To configure the validator, you can pass a JsonSchemaFactory instance or a
+  options map as the second parameter. See scjsv.core/validator docstring for
+  the options."
   ([schema]
-   (json-validator schema (inlining-factory)))
+   (json-validator schema (build-factory {})))
   ([schema json-schema-factory]
-   (partial validate (->json-schema schema json-schema-factory))))
+   (partial validate (->json-schema schema (->factory json-schema-factory)))))
 
 (defn validator
   "Returns a Clojure data structure validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map."
+  Schema can be given either as a JSON String or a Clojure Map.
+
+  To configure the validator, you can pass a JsonSchemaFactory instance or an
+  options map as the second parameter. The options map can have the following
+  keys:
+
+  :dereferencing -- Which dereferencing mode to use. Either :canonical (default)
+                    or :inline."
   ([schema]
-   (validator schema (inlining-factory)))
+   (validator schema (build-factory {})))
   ([schema json-schema-factory]
-   (comp (partial validate (->json-schema schema json-schema-factory))
+   (comp (partial validate (->json-schema schema (->factory json-schema-factory)))
          c/generate-string)))
