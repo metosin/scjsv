@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "resource:/does/not/exist",
+    "properties": {
+        "foo": {
+            "$ref": "#/definitions/foo"
+        }
+    },
+    "definitions": {
+        "foo": {
+            "enum": ["foo"]
+        }
+    }
+}

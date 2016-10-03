@@ -1,3 +1,9 @@
+## Unreleased
+
+- Make the validator configurable via an options map. You can use it to enable [inline dereferencing][inline-deref] by passing `{:dereferencing :inline}` as the second parameter to `validator`/`json-validator`.
+
+[inline-deref]: (http://json-schema.org/latest/json-schema-core.html#anchor30).
+
 ## 0.3.0 (7.8.2016)
 
 - `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
