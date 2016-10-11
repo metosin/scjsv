@@ -1,10 +1,10 @@
-## 0.4.0 (4.10.2016)
+## 0.4.0 (2016-10-04)
 
 - Make the validator configurable via an options map. You can use it to enable [inline dereferencing][inline-deref] by passing `{:dereferencing :inline}` as the second parameter to `validator`/`json-validator`.
 
 [inline-deref]: (http://json-schema.org/latest/json-schema-core.html#anchor30).
 
-## 0.3.0 (7.8.2016)
+## 0.3.0 (2016-08-07)
 
 - `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
    - Thanks to [lvh](https://github.com/lvh)!
@@ -23,11 +23,11 @@
 [midje "1.7.0"] is available but we use "1.7.0-SNAPSHOT"
 ```
 
-## 0.2.0 (7.3.2015)
+## 0.2.0 (2015-03-07)
 
 - **BREAKING**: rewrote the whole public api to support caching of computed `JSONSchema`-objects.
 - up to 1000x faster on a [sample-project](https://github.com/metosin/ring-swagger/blob/master/test/ring/swagger/validator.clj)
 
-## 0.1.0 (6.3.2015)
+## 0.1.0 (2015-03-06)
 
 - Initial public version
