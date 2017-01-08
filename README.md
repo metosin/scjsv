@@ -1,4 +1,4 @@
-# scjsv [![Build Status](https://travis-ci.org/metosin/scjsv.svg?branch=master)](https://travis-ci.org/metosin/scjsv) [![Dependencies Status](http://jarkeeper.com/metosin/scjsv/status.png)](http://jarkeeper.com/metosin/scjsv)
+# scjsv [![License](https://img.shields.io/badge/License-EPL%201.0-blue.svg)](https://www.eclipse.org/legal/epl-v10.html) [![Build Status](https://travis-ci.org/metosin/scjsv.svg?branch=master)](https://travis-ci.org/metosin/scjsv) [![Dependencies Status](http://jarkeeper.com/metosin/scjsv/status.png)](http://jarkeeper.com/metosin/scjsv)
 
 Simple Clojure JSON-Schema Validator - on top of [daveclayton/json-schema-validator](https://github.com/daveclayton/json-schema-validator).
 
