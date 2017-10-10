@@ -1,0 +1,12 @@
+{
+  "extra_property": "test",
+  "shipping_address": {
+    "street_address": "1600 Pennsylvania Avenue NW",
+    "state": "DC"
+  },
+  "billing_address": {
+    "street_address": "1st Street SE",
+    "city": "Washington",
+    "state": "DC"
+  }
+}

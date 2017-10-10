@@ -32,14 +32,16 @@
 
 (defn- validate
   "Validates (f data) against a given JSON Schema."
-  [json-schema data]
-  (let [json-data (JsonLoader/fromString data)
-        report (.validate ^JsonSchema json-schema ^JsonNode json-data)
-        lp (doto (ListProcessingReport.) (.mergeWith report))
-        errors (iterator-seq (.iterator lp))
-        ->clj #(-> (.asJson ^ProcessingMessage %) str (c/parse-string true))]
-    (if (seq errors)
-      (map ->clj errors))))
+  ([json-schema data]
+   (validate json-schema data false))
+  ([json-schema data deep-check]
+   (let [json-data (JsonLoader/fromString data)
+         report (.validate ^JsonSchema json-schema ^JsonNode json-data deep-check)
+         lp (doto (ListProcessingReport.) (.mergeWith report))
+         errors (iterator-seq (.iterator lp))
+         ->clj #(-> (.asJson ^ProcessingMessage %) str (c/parse-string true))]
+     (if (seq errors)
+       (map ->clj errors)))))
 
 (defn- ->factory
   "Converts value to a JsonSchemaFactory if it isn't one."

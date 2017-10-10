@@ -10,7 +10,17 @@
         valid (slurp (io/resource "scjsv/valid.json"))
         invalid (slurp (io/resource "scjsv/invalid.json"))]
     (validate valid) => nil
-    (validate invalid) =not=> nil))
+    (validate invalid) =not=> nil
+    (count (validate invalid true)) => 1))
+
+(fact "Validating JSON with deep-check"
+  (let [schema (slurp (io/resource "scjsv/schema_deep.json"))
+        validate (v/json-validator schema)
+        valid (slurp (io/resource "scjsv/valid.json"))
+        invalid (slurp (io/resource "scjsv/deep_invalid.json"))]
+    (validate valid) => nil
+    (validate invalid true) =not=> nil
+    (count (validate invalid true)) => 2))
 
 (fact "Validating Clojure data against JSON Schema (as Clojure)"
   (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
