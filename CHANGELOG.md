@@ -1,3 +1,7 @@
+## 0.4.1 (2018-02-15)
+
+- updated dependencies
+
 ## 0.4.0 (2016-10-04)
 
 - Make the validator configurable via an options map. You can use it to enable [inline dereferencing][inline-deref] by passing `{:dereferencing :inline}` as the second parameter to `validator`/`json-validator`.
