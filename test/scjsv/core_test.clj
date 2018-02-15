@@ -1,59 +1,63 @@
 (ns scjsv.core-test
-  (:require [midje.sweet :refer :all]
-            [scjsv.core :as v]
-            [clojure.java.io :as io])
-  (:import [com.github.fge.jsonschema.main JsonSchemaFactory]))
+  (:require [clojure.java.io :as io]
+            [clojure.test :refer [deftest is testing]]
+            [scjsv.core :as v])
+  (:import [com.github.fge.jsonschema.core.exceptions ProcessingException]
+           [com.github.fge.jsonschema.main JsonSchemaFactory]))
 
-(fact "Validating JSON string against JSON Schema (as string)"
-  (let [schema (slurp (io/resource "scjsv/schema.json"))
-        validate (v/json-validator schema)
-        valid (slurp (io/resource "scjsv/valid.json"))
-        invalid (slurp (io/resource "scjsv/invalid.json"))]
-    (validate valid) => nil
-    (validate invalid) =not=> nil))
+(deftest json-string-validation-test
+  (testing "Validating JSON string against JSON Schema (as string)"
+    (let [schema (slurp (io/resource "scjsv/schema.json"))
+          validate (v/json-validator schema)
+          valid (slurp (io/resource "scjsv/valid.json"))
+          invalid (slurp (io/resource "scjsv/invalid.json"))]
+      (is (nil? (validate valid)))
+      (is (some? (validate invalid))))))
 
-(fact "Validating Clojure data against JSON Schema (as Clojure)"
-  (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
-                :type "object"
-                :properties {:billing_address {:$ref "#/definitions/address"}
-                             :shipping_address {:$ref "#/definitions/address"}}
-                :definitions {:address {:type "object"
-                                        :properties {:street_address {:type "string"}
-                                                     :city {:type "string"}
-                                                     :state {:type "string"}}
-                                        :required ["street_address", "city", "state"]}}}
-        validate (v/validator schema)
-        validate-with-explicit-factory (v/validator schema (JsonSchemaFactory/byDefault))
-        valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
-                                  :city "Washington"
-                                  :state "DC"}
-               :billing_address {:street_address "1st Street SE"
-                                 :city "Washington"
-                                 :state "DC"}}
-        invalid (update-in valid [:shipping_address] dissoc :state)]
+(deftest clojure-data-validation-test
+  (testing "Validating Clojure data against JSON Schema (as Clojure)"
+    (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
+                  :type "object"
+                  :properties {:billing_address {:$ref "#/definitions/address"}
+                               :shipping_address {:$ref "#/definitions/address"}}
+                  :definitions {:address {:type "object"
+                                          :properties {:street_address {:type "string"}
+                                                       :city {:type "string"}
+                                                       :state {:type "string"}}
+                                          :required ["street_address", "city", "state"]}}}
+          validate (v/validator schema)
+          validate-with-explicit-factory (v/validator schema (JsonSchemaFactory/byDefault))
+          valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
+                                    :city "Washington"
+                                    :state "DC"}
+                 :billing_address {:street_address "1st Street SE"
+                                   :city "Washington"
+                                   :state "DC"}}
+          invalid (update-in valid [:shipping_address] dissoc :state)]
 
-    (validate valid) => nil
-    (validate invalid) =not=> nil
+      (is (nil? (validate valid)))
+      (is (some? (validate invalid)))
 
-    (validate-with-explicit-factory valid) => nil
-    (validate-with-explicit-factory invalid) =not=> nil
+      (is (nil? (validate-with-explicit-factory valid)))
+      (is (some? (validate-with-explicit-factory invalid)))
 
-    (fact "validation errors are lovely clojure maps"
-      (validate invalid)
-      => [{:domain "validation"
-           :instance {:pointer "/shipping_address"}
-           :keyword "required"
-           :level "error"
-           :message "object has missing required properties ([\"state\"])"
-           :missing ["state"]
-           :required ["city" "state" "street_address"]
-           :schema {:loadingURI "#"
-                    :pointer "/definitions/address"}}])))
+      (testing "validation errors are lovely clojure maps"
+        (is (= (validate invalid)
+               [{:domain "validation"
+                 :instance {:pointer "/shipping_address"}
+                 :keyword "required"
+                 :level "error"
+                 :message "object has missing required properties ([\"state\"])"
+                 :missing ["state"]
+                 :required ["city" "state" "street_address"]
+                 :schema {:loadingURI "#"
+                          :pointer "/definitions/address"}}]))))))
 
-(fact "Validating a schema that refers to itself"
-  (let [schema (slurp (io/resource "scjsv/with_id.json"))
-        default-validate (v/validator schema)
-        inline-validate (v/validator schema {:dereferencing :inline})
-        valid {:foo "foo"}]
-    (default-validate valid) =not=> nil
-    (inline-validate valid) => nil))
+(deftest self-referential-schema-test
+  (testing "Validating a schema that refers to itself"
+    (let [schema (slurp (io/resource "scjsv/with_id.json"))
+          default-validate (v/validator schema)
+          inline-validate (v/validator schema {:dereferencing :inline})
+          valid {:foo "foo"}]
+      (is (thrown? ProcessingException (default-validate valid)))
+      (is (nil? (inline-validate valid))))))
