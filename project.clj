@@ -16,6 +16,7 @@
                              [funcool/codeina "0.5.0" :exclude [org.clojure/clojure]]]}
              :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}}
   :aliases {"test-ancient" ["midje"]}
+  :deploy-repositories [["releases" :clojars]]
   :codeina {:sources ["src"]
             :target "gh-pages/doc"
             :src-uri "http://github.com/metosin/scjsv/blob/master/"
