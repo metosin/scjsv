@@ -1,7 +1,7 @@
 sudo: false
 language: clojure
 lein: 2.7.1
-script: lein with-profile $PROFILE do clean, midje, check
+script: lein with-profile $PROFILE do clean, test, check
 jdk:
   - openjdk6
   - openjdk7
