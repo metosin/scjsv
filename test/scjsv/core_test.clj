@@ -1,9 +1,11 @@
 (ns scjsv.core-test
   (:require [clojure.java.io :as io]
             [clojure.test :refer [deftest is testing]]
+            [cheshire.core :as cheshire]
             [scjsv.core :as v])
   (:import [com.github.fge.jsonschema.core.exceptions ProcessingException]
            [com.github.fge.jsonschema.main JsonSchemaFactory]))
+
 
 (deftest json-string-validation-test
   (testing "Validating JSON string against JSON Schema (as string)"
@@ -14,17 +16,21 @@
       (is (nil? (validate valid)))
       (is (some? (validate invalid))))))
 
+(def delivery-address-schema
+  {:$schema "http://json-schema.org/draft-04/schema#"
+   :type "object"
+   :properties {:billing_address {:$ref "#/definitions/address"}
+                :shipping_address {:$ref "#/definitions/address"}}
+   :definitions {:address {:type "object"
+                           :properties {:street_address {:type "string"}
+                                        :city {:type "string"}
+                                        :state {:type "string"}}
+                           :required ["street_address", "city", "state"]}}})
+
+
 (deftest clojure-data-validation-test
   (testing "Validating Clojure data against JSON Schema (as Clojure)"
-    (let [schema {:$schema "http://json-schema.org/draft-04/schema#"
-                  :type "object"
-                  :properties {:billing_address {:$ref "#/definitions/address"}
-                               :shipping_address {:$ref "#/definitions/address"}}
-                  :definitions {:address {:type "object"
-                                          :properties {:street_address {:type "string"}
-                                                       :city {:type "string"}
-                                                       :state {:type "string"}}
-                                          :required ["street_address", "city", "state"]}}}
+    (let [schema delivery-address-schema
           validate (v/validator schema)
           validate-with-explicit-factory (v/validator schema (JsonSchemaFactory/byDefault))
           valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
@@ -52,6 +58,41 @@
                  :required ["city" "state" "street_address"]
                  :schema {:loadingURI "#"
                           :pointer "/definitions/address"}}]))))))
+
+
+(deftest json-validation-test
+  (testing "Testing json data validation against JSON Schema (as JSON)"
+    (let [schema delivery-address-schema
+          validate (v/json-validator schema)
+          valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
+                                    :city "Washington"
+                                    :state "DC"}
+                 :billing_address {:street_address "1st Street SE"
+                                   :city "Washington"
+                                   :state "DC"}}
+          invalid (update-in valid [:shipping_address] dissoc :state)]
+      (is (nil? (validate (cheshire/generate-string valid))))
+      (is (some? (validate (cheshire/generate-string invalid)))))))
+
+
+(deftest reader-validation-test
+  (testing "Testing json data validation against JSON Schema (as JSON from a Reader)"
+    (let [schema delivery-address-schema
+          validate (v/json-reader-validator schema)
+          valid {:shipping_address {:street_address "1600 Pennsylvania Avenue NW"
+                                    :city "Washington"
+                                    :state "DC"}
+                 :billing_address {:street_address "1st Street SE"
+                                   :city "Washington"
+                                   :state "DC"}}
+          invalid (update-in valid [:shipping_address] dissoc :state)
+          ->reader (comp io/reader io/input-stream
+                      (fn [s] (.getBytes s))
+                      cheshire/generate-string)]
+
+      (is (nil? (validate (->reader valid))))
+      (is (some? (validate (->reader invalid)))))))
+
 
 (deftest self-referential-schema-test
   (testing "Validating a schema that refers to itself"
