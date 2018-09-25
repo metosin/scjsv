@@ -28,8 +28,7 @@
   (let [mapper (ObjectMapper. cheshire-factory/json-factory)]
     (JsonNodeReader. mapper)))
 
-(def ^JsonNodeReader reader (build-reader))
-
+(def ^{:tag JsonNodeReader, :private true} reader (build-reader))
 
 (defn- ^JsonNode reader->json-node
   "Creates a JsonNode from a Reader"
