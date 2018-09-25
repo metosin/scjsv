@@ -1,4 +1,16 @@
 (ns scjsv.core
+  "Use [[validator]], [[json-validtor]], or [[json-reader-validator]] to
+  construct a validator function.
+
+  ### Validator functions
+
+  The first argument for the validator function is the data. The optional second
+  argument is an options map with the following keys:
+
+  | key           | default  | description |
+  |---------------|----------|-------------|
+  | `:deep-check` | `false`  | Check nested elements even if the parent elements are invalid.
+  "
   (:require [cheshire.core :as c]
             [cheshire.factory :as cheshire-factory])
   (:import [com.fasterxml.jackson.databind JsonNode ObjectMapper]
@@ -44,7 +56,7 @@
         (.freeze))))
 
 (defn- ->json-schema
-  "Creates a JSONSchema instance either from a JSON string or a Clojure Map."
+  "Creates a JSONSchema instance either from a JSON string or a Clojure map."
   [schema ^JsonSchemaFactory factory]
   (let [schema-string (if (string? schema)
                         schema
@@ -79,12 +91,9 @@
 ;;
 
 (defn- build-validator
-  "Returns a validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map.
+  "Returns a validator function. Schema can be given either as a JSON String or
+  a Clojure map.
 
-  To configure the validator, you can pass a JsonSchemaFactory instance or a
-  options map as the second parameter. See scjsv.core/validator docstring for
-  the options.
   `->json-node` is the function which will be applied to datum to transform them into
   a JsonNode"
   [schema json-schema-factory ->json-node]
@@ -97,10 +106,10 @@
                opts))))
 
 (defn json-reader-validator
-  "Returns a `java.io.Reader` validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map.
+  "Returns a `java.io.Reader` validator function. Schema can be given either as
+  a JSON String or a Clojure map.
 
-  To configure the validator, you can pass a JsonSchemaFactory instance or a
+  To configure the validator, you can pass a `JsonSchemaFactory` instance or a
   options map as the second parameter. See [[scjsv.core/validator]] docstring for
   the options."
   ([schema]
@@ -110,10 +119,10 @@
 
 
 (defn json-validator
-  "Returns a JSON string validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map.
+  "Returns a JSON string validator function. Schema can be given either as a
+  JSON String or a Clojure map.
 
-  To configure the validator, you can pass a JsonSchemaFactory instance or a
+  To configure the validator, you can pass a `JsonSchemaFactory` instance or a
   options map as the second parameter. See [[scjsv.core/validator]] docstring for
   the options."
   ([schema]
@@ -124,16 +133,16 @@
 
 
 (defn validator
-  "Returns a Clojure data structure validator (a single arity fn).
-  Schema can be given either as a JSON String or a Clojure Map.
+  "Returns a Clojure data structure validator function. Schema can be given
+  either as a JSON String or a Clojure map.
 
-  To configure the validator, you can pass a JsonSchemaFactory instance or an
+  To configure the validator, you can pass a `JsonSchemaFactory` instance or an
   options map as the second parameter. The options map can have the following
   keys:
 
-  | key            | description  |
-  |----------------|--------------|
-  | :dereferencing | Which dereferencing mode to use. Either `:canonical` (default) or `:inline`."
+  | key              | default      | description  |
+  |------------------|--------------|--------------|
+  | `:dereferencing` | `:canonical` | Which dereferencing mode to use. Either `:canonical` or `:inline`."
   ([schema]
    (validator schema (build-factory {})))
   ([schema json-schema-factory]
