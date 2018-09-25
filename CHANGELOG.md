@@ -1,6 +1,7 @@
-## 0.4.2 (unreleased)
+## 0.5.0 (unreleased)
 
-- updated dependencies
+- You can now validate data with `java.io.Reader` as the input in addition to strings and Clojure maps. ([#10](https://github.com/metosin/scjsv/pull/10))
+- Updated dependencies.
 
 ## 0.4.1 (2018-02-15)
 
