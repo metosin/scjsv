@@ -1,3 +1,7 @@
+## 0.4.2 (unreleased)
+
+- updated dependencies
+
 ## 0.4.1 (2018-02-15)
 
 - updated dependencies

@@ -5,16 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
-  :dependencies [[cheshire "5.8.0"]
-                 [com.github.java-json-tools/json-schema-validator "2.2.8"]]
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]
-                                  [org.codehaus.jsr166-mirror/jsr166y "1.7.0"] ]
-                   :plugins [[lein-clojars "0.9.1"]
-                             [lein-ring "0.9.7"]
-                             [funcool/codeina "0.5.0" :exclude [org.clojure/clojure]]]}
-             :1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}}
-  :deploy-repositories [["releases" :clojars]]
-  :codeina {:sources ["src"]
-            :target "gh-pages/doc"
-            :src-uri "http://github.com/metosin/scjsv/blob/master/"
-            :src-uri-prefix "#L"})
+  :dependencies [[cheshire "5.8.1"]
+                 [com.github.java-json-tools/json-schema-validator "2.2.10"]]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]]}}
+  :deploy-repositories [["releases" :clojars]])
