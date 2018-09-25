@@ -8,7 +8,7 @@ Simple Clojure JSON-Schema Validator - on top of [java-json-tools/json-schema-va
 
 ## Usage
 
-* [API docs](https://cljdoc.xyz/d/metosin/scjsv/0.4.1/api/scjsv.core)
+* [API docs](https://cljdoc.xyz/d/metosin/scjsv/CURRENT/api/scjsv.core)
 * `validator` creates a Clojure data structure validator against the given JSON Schema.
 * `json-validator` created a JSON string validator against the given JSON Schema.
 * JSON Schemas can be represented either as JSON strings or as Clojure Maps.	
