@@ -91,7 +91,7 @@
       ->json-node))
 
 (defn json-reader-validator
-  "Returns a JSON string validator (a single arity fn).
+  "Returns a `java.io.Reader` validator (a single arity fn).
   Schema can be given either as a JSON String or a Clojure Map.
 
   To configure the validator, you can pass a JsonSchemaFactory instance or a
