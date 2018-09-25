@@ -1,3 +1,12 @@
+## 0.5.0 (unreleased)
+
+- You can now validate data with `java.io.Reader` as the input in addition to strings and Clojure maps. ([#10](https://github.com/metosin/scjsv/pull/10))
+- Updated dependencies.
+
+## 0.4.1 (2018-02-15)
+
+- updated dependencies
+
 ## 0.4.0 (2016-10-04)
 
 - Make the validator configurable via an options map. You can use it to enable [inline dereferencing][inline-deref] by passing `{:dereferencing :inline}` as the second parameter to `validator`/`json-validator`.
