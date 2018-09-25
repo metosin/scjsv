@@ -59,7 +59,7 @@
   Schema can be given either as a JSON String or a Clojure Map.
 
   To configure the validator, you can pass a JsonSchemaFactory instance or a
-  options map as the second parameter. See scjsv.core/validator docstring for
+  options map as the second parameter. See [[scjsv.core/validator]] docstring for
   the options."
   ([schema]
    (json-validator schema (build-factory {})))
@@ -74,8 +74,9 @@
   options map as the second parameter. The options map can have the following
   keys:
 
-  :dereferencing -- Which dereferencing mode to use. Either :canonical (default)
-                    or :inline."
+  | key            | description  |
+  |----------------|--------------|
+  | :dereferencing | Which dereferencing mode to use. Either `:canonical` (default) or `:inline`."
   ([schema]
    (validator schema (build-factory {})))
   ([schema json-schema-factory]
