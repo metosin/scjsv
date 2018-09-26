@@ -1,5 +1,5 @@
 (ns scjsv.core
-  "Use [[validator]], [[json-validtor]], or [[json-reader-validator]] to
+  "Use [[validator]], [[json-validator]], or [[json-reader-validator]] to
   construct a validator function.
 
   ### Validator functions
