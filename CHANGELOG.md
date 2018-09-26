@@ -1,7 +1,7 @@
 ## 0.5.0 (2018-09-25)
 
 - You can now validate data with `java.io.Reader` as the input in addition to strings and Clojure maps. ([#10](https://github.com/metosin/scjsv/pull/10))
-- You can validate children of a container if if the container itself is invalid by passing `{:deep-check true}` to the validator function. ([#7](https://github.com/metosin/scjsv/pull/7))
+- You can validate children of a container even if the container itself is invalid by passing `{:deep-check true}` to the validator function. ([#7](https://github.com/metosin/scjsv/pull/7))
 - Updated dependencies.
 
 ## 0.4.1 (2018-02-15)
@@ -15,7 +15,7 @@
 [inline-deref]: (http://json-schema.org/latest/json-schema-core.html#anchor30).
 
 ## 0.3.0 (2016-08-07)
-
+the
 - `validator` and `json-validator` now take a `JsonSchemaFactory` as an optional argument. This allows e.g. pre-loading schema definitions.
    - Thanks to [lvh](https://github.com/lvh)!
 
