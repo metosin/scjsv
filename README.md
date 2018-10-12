@@ -6,6 +6,8 @@ Simple Clojure JSON-Schema Validator - on top of [java-json-tools/json-schema-va
 
 [![Clojars Project](http://clojars.org/metosin/scjsv/latest-version.svg)](http://clojars.org/metosin/scjsv)
 
+scjsv requires Java 1.8 or later.
+
 ## Usage
 
 * [API docs](https://cljdoc.xyz/d/metosin/scjsv/CURRENT/api/scjsv.core)
