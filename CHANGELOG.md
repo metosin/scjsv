@@ -1,3 +1,7 @@
+## Unreleased
+
+- jsonista is used internally instead of Cheshire. ([#12](https://github.com/metosin/scjsv/issues/12))
+
 ## 0.5.0 (2018-09-25)
 
 - You can now validate data with `java.io.Reader` as the input in addition to strings and Clojure maps. ([#10](https://github.com/metosin/scjsv/pull/10))
