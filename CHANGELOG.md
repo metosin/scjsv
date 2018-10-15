@@ -1,3 +1,7 @@
+## Unreleased
+
+- Make `:deep-check` configurable via the factory functions. ([#13](https://github.com/metosin/scjsv/pull/13))
+
 ## 0.5.0 (2018-09-25)
 
 - You can now validate data with `java.io.Reader` as the input in addition to strings and Clojure maps. ([#10](https://github.com/metosin/scjsv/pull/10))

@@ -107,8 +107,11 @@
   (testing "Validating JSON with deep-check"
     (let [schema (slurp (io/resource "scjsv/schema_deep.json"))
           validate (v/json-validator schema)
+          validate2 (v/json-validator schema {:deep-check true})
           valid (slurp (io/resource "scjsv/valid.json"))
           invalid (slurp (io/resource "scjsv/deep_invalid.json"))]
       (is (nil? (validate valid)))
-      (is (some? (validate invalid {:deep-check true})))
-      (is (= 2 (count (validate invalid {:deep-check true})))))))
+      (is (= 1 (count (validate invalid))))
+      (is (= 2 (count (validate invalid {:deep-check true}))))
+      (is (= 2 (count (validate2 invalid))))
+      (is (= 1 (count (validate2 invalid {:deep-check false})))))))

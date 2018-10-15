@@ -96,13 +96,13 @@
   `->json-node` is the function which will be applied to datum to transform them into
   a JsonNode"
   [schema json-schema-factory ->json-node]
-  (fn validator
-    ([data] (validator data nil))
-    ([data opts]
-     (validate (->json-schema schema (->factory (or json-schema-factory
-                                                    (build-factory {}))))
-               (->json-node data)
-               opts))))
+  (let [validator-opts (when (map? json-schema-factory)
+                         (select-keys json-schema-factory [:deep-check]))
+        factory (->factory (or json-schema-factory {}))]
+    (fn validator
+      ([data] (validator data nil))
+      ([data opts]
+       (validate (->json-schema schema factory) (->json-node data) (merge validator-opts opts))))))
 
 (defn json-reader-validator
   "Returns a `java.io.Reader` validator function. Schema can be given either as
@@ -141,9 +141,15 @@
 
   | key              | default      | description  |
   |------------------|--------------|--------------|
-  | `:dereferencing` | `:canonical` | Which dereferencing mode to use. Either `:canonical` or `:inline`."
+  | `:dereferencing` | `:canonical` | Which dereferencing mode to use. Either `:canonical` or `:inline`.
+  | `:deep-check`    | `false`      | Check nested elements even if the parent elements are invalid.
+
+  Note that you can't pass a `JsonSchemaFactory` instance and enable
+  `:deep-check` at once. If you need this, pass `{:deep-check true}` as the
+  second argument to the validator function."
   ([schema]
-   (validator schema (build-factory {})))
+   (validator schema nil))
   ([schema json-schema-factory]
-   (build-validator schema json-schema-factory
+   (build-validator schema
+                    json-schema-factory
                     (comp string->json-node c/generate-string))))
