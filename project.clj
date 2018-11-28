@@ -6,6 +6,7 @@
   :dependencies [[metosin/jsonista "0.2.2"]
                  [com.github.java-json-tools/json-schema-validator "2.2.10"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.9.0"]]
-                   :plugins [[lein-codox "0.10.4"]]}}
+                   :plugins [[lein-codox "0.10.4"]
+                             [lein-eftest "0.5.3"]]}}
   :codox {:metadata {:doc/format :markdown}}
   :deploy-repositories [["releases" :clojars]])
