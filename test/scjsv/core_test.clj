@@ -1,7 +1,7 @@
 (ns scjsv.core-test
   (:require [clojure.java.io :as io]
             [clojure.test :refer [deftest is testing]]
-            [cheshire.core :as cheshire]
+            [jsonista.core :as jsonista]
             [scjsv.core :as v])
   (:import [com.github.fge.jsonschema.core.exceptions ProcessingException]
            [com.github.fge.jsonschema.main JsonSchemaFactory]))
@@ -71,8 +71,8 @@
                                    :city "Washington"
                                    :state "DC"}}
           invalid (update-in valid [:shipping_address] dissoc :state)]
-      (is (nil? (validate (cheshire/generate-string valid))))
-      (is (some? (validate (cheshire/generate-string invalid)))))))
+      (is (nil? (validate (jsonista/write-value-as-string valid))))
+      (is (some? (validate (jsonista/write-value-as-string invalid)))))))
 
 
 (deftest reader-validation-test
@@ -88,7 +88,7 @@
           invalid (update-in valid [:shipping_address] dissoc :state)
           ->reader (comp io/reader io/input-stream
                       (fn [s] (.getBytes s))
-                      cheshire/generate-string)]
+                      jsonista/write-value-as-string)]
 
       (is (nil? (validate (->reader valid))))
       (is (some? (validate (->reader invalid)))))))

@@ -11,8 +11,7 @@
   |---------------|----------|-------------|
   | `:deep-check` | `false`  | Check nested elements even if the parent elements are invalid.
   "
-  (:require [cheshire.core :as c]
-            [cheshire.factory :as cheshire-factory])
+  (:require [jsonista.core :as jsonista])
   (:import [com.fasterxml.jackson.databind JsonNode ObjectMapper]
            [com.github.fge.jackson JsonNodeReader]
            [com.github.fge.jsonschema.main JsonSchemaFactory]
@@ -22,12 +21,10 @@
            [com.github.fge.jsonschema.main JsonSchema]
            [java.io Reader]))
 
-(defn- build-reader
-  "Build a node reader based on the defaults of the cheshire json-factory"
-  []
-  (let [mapper (ObjectMapper. cheshire-factory/json-factory)]
-    (JsonNodeReader. mapper)))
+(def ^:private +object-mapper+
+  (jsonista/object-mapper {:decode-key-fn true}))
 
+(defn- build-reader [] (JsonNodeReader. +object-mapper+))
 (def ^{:tag JsonNodeReader, :private true} reader (build-reader))
 
 (defn- ^JsonNode reader->json-node
@@ -39,7 +36,6 @@
   "Creates a JsonNode from a String"
   [^String data]
   (reader->json-node (java.io.StringReader. data)))
-
 
 (defn- build-factory
   "Creates a JsonSchemaFactory based on the options map."
@@ -59,7 +55,7 @@
   [schema ^JsonSchemaFactory factory]
   (let [schema-string (if (string? schema)
                         schema
-                        (c/generate-string schema))
+                        (jsonista/write-value-as-string schema))
         schema-object (string->json-node schema-string)]
     (.getJsonSchema factory schema-object)))
 
@@ -71,7 +67,7 @@
    (let [report (.validate json-schema json-data deep-check)
          lp (doto (ListProcessingReport.) (.mergeWith report))
          errors (iterator-seq (.iterator lp))
-         ->clj #(-> (.asJson ^ProcessingMessage %) str (c/parse-string true))]
+         ->clj #(-> (.asJson ^ProcessingMessage %) str (jsonista/read-value +object-mapper+))]
      (if (seq errors)
        (map ->clj errors)))))
 
@@ -152,4 +148,4 @@
   ([schema json-schema-factory]
    (build-validator schema
                     json-schema-factory
-                    (comp string->json-node c/generate-string))))
+                    (comp string->json-node jsonista/write-value-as-string))))
