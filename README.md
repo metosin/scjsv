@@ -2,6 +2,8 @@
 
 Simple Clojure JSON-Schema Validator - on top of [java-json-tools/json-schema-validator](https://github.com/java-json-tools/json-schema-validator).
 
+scjsv supports JSON Schema up to draft-04. If you need support for draft-07, see [luposlip/json-schema](https://github.com/luposlip/json-schema).
+
 ## Latest version
 
 [![Clojars Project](http://clojars.org/metosin/scjsv/latest-version.svg)](http://clojars.org/metosin/scjsv)
