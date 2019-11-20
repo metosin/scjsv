@@ -1,4 +1,4 @@
-## Unreleased
+## 0.6.0 (2019-11-20)
 
 - jsonista is used internally instead of Cheshire. ([#12](https://github.com/metosin/scjsv/issues/12))
 - scjsv now requires Java 1.8 or later.
