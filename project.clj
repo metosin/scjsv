@@ -1,4 +1,4 @@
-(defproject metosin/scjsv "0.6.2"
+(defproject metosin/scjsv "0.6.3-SNAPSHOT"
   :description "Simple JSON-Schema validator for Clojure"
   :url "https://github.com/metosin/scjsv"
   :license {:name "Eclipse Public License"
