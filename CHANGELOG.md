@@ -1,3 +1,12 @@
+## 0.6.2 (2021-03-09)
+
+- updated dependencies:
+
+```clj
+[metosin/jsonista "0.3.1"] is available but we use "0.2.6"
+[com.github.java-json-tools/json-schema-validator "2.2.14"] is available but we use "2.2.13"
+```
+
 ## 0.6.1 (2020-05-16)
 
 - updated dependencies:
